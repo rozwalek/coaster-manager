@@ -1,4 +1,4 @@
-# Coster Manager
+# Coaster Manager
 <p align="center">
 <a href="https://codeigniter.com/"><img src="https://img.shields.io/badge/CodeIgniter-orange?style=for-the-badge&logo=CodeIgniter&logoColor=white" alt="Build Status"></a>
 <a href="https://www.postgresql.org/"><img src="https://img.shields.io/badge/redis-%23316192.svg?style=for-the-badge&logo=redis&logoColor=white" alt="Build Status"></a>
@@ -26,7 +26,7 @@ Application "CoasterManager" test task created in the recruitment process for Bl
 
 #### Clone project
 
-`git clone https://bitbucket.org/marketnews24/coastermanager.git`
+`git clone https://github.com/rozwalek/coaster-manager.git`
 
 #### Build and run containers
 ```
@@ -37,9 +37,13 @@ docker exec -it {CONTAINER_ID} /bin/bash
 
 #### Configure project
 
-Create ``.env`` file and set ``CI_ENVIRONMENT`` variable,  available options:
-- ``development``
-- ``production``
+Create ``.env`` file and set variables options:
+
+```
+CI_ENVIRONMENT = development
+REDIS_HOST = 'redis'
+REDIS_PORT = 6379;
+```
 
 Depending on the set environment, the application saves data to separate sections in order to separate data per environment.
 
