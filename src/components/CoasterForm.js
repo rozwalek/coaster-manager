@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import {Link, useParams} from 'react-router-dom';
 import axios from 'axios';
 
 const CoasterForm = () => {
@@ -20,8 +20,8 @@ const CoasterForm = () => {
             axios.get(`/api/coasters/${uuid}`)
                 .then(response => {
                     setCoaster({
-                        numberOfClient: response.data.numberOfClient,
-                        numberOfStaff: response.data.numberOfStaff,
+                        numberOfClient: parseInt(response.data.numberOfClient),
+                        numberOfStaff: parseInt(response.data.numberOfStaff),
                         routeLength: response.data.routeLength,
                         timeStart: response.data.timeStart,
                         timeEnd: response.data.timeEnd,
@@ -29,7 +29,7 @@ const CoasterForm = () => {
                         successMessage: ''
                     });
                 })
-                .catch(error => {
+                .catch(() => {
                     setCoaster({
                         ...coaster,
                         errorMessage: 'Error fetching data',
@@ -50,7 +50,7 @@ const CoasterForm = () => {
         axios.post(baseUrl, formData, {
             headers: { 'Content-Type': 'multipart/form-data' }
         })
-            .then(response => {
+            .then(() => {
                 setCoaster({
                     numberOfClient: '',
                     numberOfStaff: '',
@@ -61,7 +61,7 @@ const CoasterForm = () => {
                     errorMessage: '',
                 });
             })
-            .catch(error => {
+            .catch(() => {
                 setCoaster({
                     ...coaster,
                     successMessage: '',
@@ -73,8 +73,6 @@ const CoasterForm = () => {
     const onClickUpdate = () => {
         const baseUrl = "/api/coasters/"+ uuid;
 
-        console.log(coaster);
-
         const datapost = {
             'number_of_client' : parseInt(coaster.numberOfClient),
             'number_of_staff' : parseInt(coaster.numberOfStaff),
@@ -84,13 +82,14 @@ const CoasterForm = () => {
         }
 
         axios.put(baseUrl, datapost)
-            .then(response => {
+            .then(() => {
                 setCoaster({
+                    ...coaster,
                     successMessage: 'Form submitted successfully!',
                     errorMessage: '',
                 });
             })
-            .catch(error => {
+            .catch(() => {
                 setCoaster({
                     ...coaster,
                     successMessage: '',
@@ -101,7 +100,16 @@ const CoasterForm = () => {
 
     return (
         <div>
-            <h4>{uuid ? 'Edit coaster' : 'Create new coaster'}</h4>
+            <div className="row">
+                <div className="col-6">
+                    <h4>{uuid ? 'Edit coaster' : 'Create new coaster'}</h4>
+                </div>
+                <div className="col-6 text-right">
+                    {uuid && (
+                        <Link className="btn btn-sm btn-secondary" to={"/coasters/"+ uuid}>Coaster details</Link>
+                    )}
+                </div>
+            </div>
             <hr />
 
             {coaster.errorMessage && (

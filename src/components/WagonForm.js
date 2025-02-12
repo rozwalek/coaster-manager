@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import {Link, useParams} from 'react-router-dom';
 import axios from 'axios';
 
 const WagonForm = () => {
@@ -23,7 +23,7 @@ const WagonForm = () => {
                         successMessage: ''
                     });
                 })
-                .catch(error => {
+                .catch(() => {
                     setWagon({
                         ...wagon,
                         errorMessage: 'Error fetching data',
@@ -42,7 +42,7 @@ const WagonForm = () => {
         axios.post(baseUrl, formData, {
             headers: { 'Content-Type': 'multipart/form-data' }
         })
-            .then(response => {
+            .then(() => {
                 setWagon({
                     numberOfPlaces: '',
                     speed: '',
@@ -50,7 +50,7 @@ const WagonForm = () => {
                     errorMessage: '',
                 });
             })
-            .catch(error => {
+            .catch(() => {
                 setWagon({
                     ...wagon,
                     successMessage: '',
@@ -68,13 +68,14 @@ const WagonForm = () => {
         }
 
         axios.put(baseUrl, datapost)
-            .then(response => {
+            .then(() => {
                 setWagon({
+                    ...wagon,
                     successMessage: 'Form submitted successfully!',
                     errorMessage: '',
                 });
             })
-            .catch(error => {
+            .catch(() => {
                 setWagon({
                     ...wagon,
                     successMessage: '',
@@ -85,7 +86,16 @@ const WagonForm = () => {
 
     return (
         <div>
-            <h4>{coasterUuid && uuid ? 'Edit wagon for coaster: ' : 'Create new wagon for coaster: '} {coasterUuid}</h4>
+
+            <div className="row">
+                <div className="col-6">
+                    <h4>{coasterUuid && uuid ? 'Edit wagon for coaster: ' : 'Create new wagon for coaster: '} {coasterUuid}</h4>
+                </div>
+                <div className="col-6 text-right">
+                    <Link className="btn btn-sm btn-secondary mr-2" to={"/coasters/"+ coasterUuid}>Coaster details</Link>
+                    <Link className="btn btn-sm btn-secondary" to={"/coasters/"+ coasterUuid +"/edit"}>Edit coaster</Link>
+                </div>
+            </div>
             <hr />
 
             {wagon.errorMessage && (

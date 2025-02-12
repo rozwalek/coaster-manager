@@ -4,8 +4,6 @@ import {Link, useParams} from "react-router-dom";
 
 const CoasterDetails = () => {
     const [coaster, setCoaster] = useState(null);
-    const [successMessage, setSuccessMessage] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
 
     // Pobranie uuid z paramsów URL
     const { uuid } = useParams();
@@ -30,17 +28,13 @@ const CoasterDetails = () => {
 
         if (isConfirmed) {
             axios.delete(`/api/coasters/${coasterUuid}/wagons/${uuid}`)
-                .then(response => {
+                .then(() => {
                     setCoaster(prevCoaster => ({
                         ...prevCoaster,
                         wagons: prevCoaster.wagons.filter(wagon => wagon.uuid !== uuid)
                     }));
-                    setSuccessMessage('Wagon was successfully deleted!');
-                    setErrorMessage('');
                 })
-                .catch(error => {
-                    setSuccessMessage('');
-                    setErrorMessage('Wagon was not successfully deleted!');
+                .catch(() => {
                 });
         }
     };
@@ -60,7 +54,7 @@ const CoasterDetails = () => {
     };
 
     const ceil = (num) => {
-        if(num == 'Infinity') {
+        if(num === Infinity) {
             return 0;
         } else {
             return Math.ceil(num);
@@ -68,7 +62,7 @@ const CoasterDetails = () => {
     };
 
     const floor = (num) => {
-        if(num == 'Infinity') {
+        if(num === Infinity) {
             return 0;
         } else {
             return Math.floor(num);
@@ -95,11 +89,17 @@ const CoasterDetails = () => {
     return (
         <section>
             <div className="row">
-                <div className="col-6 mt-5">
-
+                <div className="col-6">
                     <h4>Coaster details {coaster.uuid}</h4>
-                    <hr/>
-
+                </div>
+                <div className="col-6 text-right">
+                    <Link className="btn btn-sm btn-secondary" to={"/coasters/"+ coaster.uuid +"/edit"}>Edit coaster</Link>
+                </div>
+            </div>
+            <hr />
+            <div className="row">
+                <div className="col-6 mt-5">
+                    <h5>&nbsp;</h5>
                     <table className="table">
                         <thead className="thead-dark">
                         <tr>
@@ -138,52 +138,47 @@ const CoasterDetails = () => {
                         </tbody>
                     </table>
 
-                    <div>
-                        <Link className="btn btn-sm btn-primary mr-2" to={"/coasters/"+ coaster.uuid+"/edit"}>Edit coaster</Link>
-                    </div>
                 </div>
                 <div className="col-6 mt-5">
-
-                    <h4>Statistics</h4>
-                    <hr/>
-
-                    <table className="table">
-                        <tbody>
-                        <tr>
-                            <th scope="row" title="Wymagana liczba personelu">Required number of personnel</th>
-                            <td>1p + {coaster.wagons && coaster.wagons.length ? (coaster.wagons.length * 2) : 0}p</td>
-                        </tr>
-                        <tr>
-                            <th scope="row" title="Możliwa liczba wagonów dla wprowadzonej liczby personelu">Possible number of wagons for the entered number of personnel</th>
-                            <td>{divideAndFloor((coaster.numberOfStaff - 1), 2)}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row" title="Czas pracy kolejki (w minutach)">Working time of the train (in minutes)</th>
-                            <td>{calculateMinutesDifference(coaster.timeStart, coaster.timeEnd)} min.</td>
-                        </tr>
-                        <tr>
-                            <th scope="row" title="Najniższa prędkość wagonika">Lowest speed of the wagon</th>
-                            <td>{minSpeed} m/s</td>
-                        </tr>
-                        <tr>
-                            <th scope="row" title="Czas 1 przejazdu (przerwa + 5 min)">Time of 1 journey (+ 5 min break)</th>
-                            <td>{ceil(coaster.routeLength * 2 / minSpeed / 60 + 5)} min</td>
-                        </tr>
-                        <tr>
-                            <th scope="row" title="Sumaryczna pojemność wagoników">Total capacity of wagons</th>
-                            <td>{totalPlaces} person</td>
-                        </tr>
-                        <tr>
-                            <th scope="row" title="Możliwa liczba wykonanych kursów przez 1 wagonik">Possible number of journeys performed by 1 wagon</th>
-                            <td>{numberOfTrips} trips</td>
-                        </tr>
-                        <tr>
-                            <th scope="row" title="Możliwa liczba obsłużonych Klientów (wszystkie wagoniki)">Possible number of served Customers (all wagons)</th>
-                            <td>{numberOfServedClients} person</td>
-                        </tr>
-                        </tbody>
-                    </table>
-
+                    <h5>Statistics</h5>
+                    <div className="alert-warning p-3">
+                        <table className="table">
+                            <tbody>
+                            <tr>
+                                <th scope="row" title="Wymagana liczba personelu">Required number of personnel</th>
+                                <td>1p + {coaster.wagons && coaster.wagons.length ? (coaster.wagons.length * 2) : 0}p</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" title="Możliwa liczba wagonów dla wprowadzonej liczby personelu">Possible number of wagons for the entered number of personnel</th>
+                                <td>{divideAndFloor((coaster.numberOfStaff - 1), 2)}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" title="Czas pracy kolejki (w minutach)">Working time of the train (in minutes)</th>
+                                <td>{calculateMinutesDifference(coaster.timeStart, coaster.timeEnd)} min.</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" title="Najniższa prędkość wagonika">Lowest speed of the wagon</th>
+                                <td>{minSpeed} m/s</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" title="Czas 1 przejazdu (przerwa + 5 min)">Time of 1 journey (+ 5 min break)</th>
+                                <td>{ceil(coaster.routeLength * 2 / minSpeed / 60 + 5)} min</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" title="Sumaryczna pojemność wagoników">Total capacity of wagons</th>
+                                <td>{totalPlaces} person</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" title="Możliwa liczba wykonanych kursów przez 1 wagonik">Possible number of journeys performed by 1 wagon</th>
+                                <td>{numberOfTrips} trips</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" title="Możliwa liczba obsłużonych Klientów (wszystkie wagoniki)">Possible number of served Customers (all wagons)</th>
+                                <td>{numberOfServedClients} person</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 <div className="col-12 mt-5">
 
@@ -222,8 +217,8 @@ const CoasterDetails = () => {
                     <div>
                         <Link className="btn btn-sm btn-primary mr-2" to={"/coasters/"+ coaster.uuid+"/create-wagon"}>Add new wagon</Link>
                         {
-                            coaster.wagons && coaster.wagons.length && coaster.wagons.length == divideAndFloor((coaster.numberOfStaff - 1), 2)
-                                ? (<span className="alert alert-danger">Dodano maksymalną liczbę wagoników dla wprowadzonej liczby personelu obsługującego</span>)
+                            coaster.wagons && coaster.wagons.length && coaster.wagons.length >= divideAndFloor((coaster.numberOfStaff - 1), 2)
+                                ? (<span className="alert alert-danger">Dodano maksymalną liczbę wagoników dla wprowadzonej liczby personelu obsługującego kolejkę</span>)
                             : ''
                         }
                     </div>
