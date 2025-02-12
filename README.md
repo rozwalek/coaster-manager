@@ -90,7 +90,7 @@ _(example **{CONTAINER_ID}**: 6eaf6c947795)_
 Next, open console for ``coastermanager_php`` and run monitor script:
 
 ```
-docker exec -it {CONTAINER_ID} /bin./bash
+docker exec -it {CONTAINER_ID} /bin/bash
 php spark queue-monitor
 ```
 
