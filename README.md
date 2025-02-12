@@ -12,7 +12,8 @@
 Application "CoasterManager" test task created in the recruitment process for BlueBinary.io 
 
 ## Frameworks
-* CodeIgniter 4.6.0
+* CodeIgniter (v.4.6.0)
+* React (v.1.4.0)
 
 ## Requirements
 
